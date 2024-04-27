@@ -1,1 +1,19 @@
-spring.application.name=life-planning-application
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: ${DATASOURCE_USERNAME}
+    url: ${DATASOURCE_URL}
+    password: ${DATASOURCE_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: 'true'
+    hibernate:
+      ddl-auto: validate
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+jwt:
+  token:
+    secret: ${JWT_SECRET}
+    expired: ${JWT_EXPIRED}
