@@ -1,8 +1,10 @@
 package ru.asayke.entity;
 
 import javax.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.asayke.entity.enums.Priority;
 
 import java.util.Date;
 
@@ -26,4 +28,15 @@ public class ScheduledEvent {
 
     @Column(name = "date")
     Date date;
+
+    @Column(name = "priority")
+    @Enumerated(EnumType.STRING)
+    Priority priority;
+
+    @Column(name = "has_passed")
+    Boolean hasPassed = false;
+
+    @ManyToOne
+    @JoinColumn(name = "application_user_id")
+    ApplicationUser applicationUser;
 }

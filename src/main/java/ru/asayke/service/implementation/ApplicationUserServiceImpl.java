@@ -15,8 +15,8 @@ import ru.asayke.entity.ApplicationUser;
 import ru.asayke.repository.ApplicationUserRepository;
 import ru.asayke.security.JwtTokenProvider;
 import ru.asayke.service.ApplicationUserService;
-import ru.asayke.util.ErrorsUtil;
-import ru.asayke.util.MapperUtil;
+import ru.asayke.util.ErrorsUtils;
+import ru.asayke.util.MapperUtils;
 import ru.asayke.util.validator.RegistrationValidator;
 
 import java.util.List;
@@ -53,12 +53,12 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
         registrationValidator.validate(request, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            ErrorsUtil.returnErrorsToClient(bindingResult);
+            ErrorsUtils.returnErrorsToClient(bindingResult);
         }
 
         request.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        ApplicationUser applicationUser = MapperUtil.enrichUserFromRegistrationDto(request);
+        ApplicationUser applicationUser = MapperUtils.enrichUserFromRegistrationDto(request);
 
         userRepository.save(applicationUser);
     }

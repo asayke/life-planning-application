@@ -14,7 +14,7 @@ import ru.asayke.security.JwtTokenProvider;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtTokenProvider jwtTokenProvider;
-    private static final String LOGIN_ENDPOINT = "/api/**";
+    private static final String LOGIN_ENDPOINT = "/api/auth/**";
 
     @Bean
     public AuthenticationManager authenticationManager() throws Exception {

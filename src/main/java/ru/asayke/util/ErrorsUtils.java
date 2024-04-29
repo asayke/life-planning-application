@@ -6,7 +6,7 @@ import ru.asayke.exception.ApplicationUserValidationException;
 
 import java.util.List;
 
-public class ErrorsUtil {
+public class ErrorsUtils {
     public static void returnErrorsToClient(BindingResult bindingResult){
         StringBuilder errorsMessage = new StringBuilder();
 

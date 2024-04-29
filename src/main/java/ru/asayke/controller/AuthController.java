@@ -1,4 +1,4 @@
-package ru.asayke.conroller;
+package ru.asayke.controller;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

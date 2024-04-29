@@ -1,11 +1,13 @@
 package ru.asayke.util;
 
 import ru.asayke.dto.RegistrationRequest;
+import ru.asayke.dto.ScheduledEventDto;
 import ru.asayke.entity.ApplicationUser;
+import ru.asayke.entity.ScheduledEvent;
 import ru.asayke.entity.enums.Role;
 import ru.asayke.entity.enums.Status;
 
-public class MapperUtil {
+public class MapperUtils {
 
     public static ApplicationUser enrichUserFromRegistrationDto(RegistrationRequest registrationRequest) {
         ApplicationUser applicationUser = new ApplicationUser();
@@ -20,6 +22,10 @@ public class MapperUtil {
         applicationUser.setRole(Role.ROLE_USER);
 
         return applicationUser;
+    }
+
+    public static ScheduledEventDto convertScheduledEventToDto(ScheduledEvent scheduledEvent) {
+        return new ScheduledEventDto();
     }
 
     public static ApplicationUser convertApplicationUserDtoToApplicationUser() {
