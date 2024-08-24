@@ -25,7 +25,15 @@ public class MapperUtils {
     }
 
     public static ScheduledEventDto convertScheduledEventToDto(ScheduledEvent scheduledEvent) {
-        return new ScheduledEventDto();
+        ScheduledEventDto scheduledEventDto = new ScheduledEventDto();
+
+        scheduledEventDto.setTitle(scheduledEvent.getTitle());
+        scheduledEventDto.setDescription(scheduledEvent.getDescription());
+        scheduledEventDto.setPriority(scheduledEvent.getPriority());
+        scheduledEventDto.setHasPassed(scheduledEvent.getHasPassed());
+        scheduledEventDto.setDate(scheduledEvent.getDate().toString());
+
+        return scheduledEventDto;
     }
 
     public static ApplicationUser convertApplicationUserDtoToApplicationUser() {

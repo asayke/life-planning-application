@@ -9,4 +9,6 @@ public interface ScheduledEventService {
     void checkScheduledEvents();
 
     List<ScheduledEventDto> findAllByCurrentUser(String username);
+
+    void createNewScheduledEvent(ScheduledEventDto scheduledEventDto, String username);
 }

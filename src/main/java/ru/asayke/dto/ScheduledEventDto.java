@@ -18,7 +18,7 @@ public class ScheduledEventDto {
 
     String description;
 
-    Date date;
+    String date;
 
     Priority priority;
 
