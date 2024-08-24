@@ -8,11 +8,11 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@Table(name = "login_approving_code")
+@Table(name = "password_reseating_code")
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LoginApprovingCode {
+public class PasswordReseatingCode {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;

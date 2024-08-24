@@ -10,11 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.asayke.dto.auth.AuthenticationRequest;
-import ru.asayke.dto.auth.RegistrationRequest;
-import ru.asayke.dto.auth.StartLoginRequest;
-import ru.asayke.dto.auth.StartRegistrationRequest;
+import ru.asayke.dto.auth.*;
 import ru.asayke.service.interfaces.ApplicationUserService;
+
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,13 +24,13 @@ public class AuthController {
     ApplicationUserService userService;
 
     @PostMapping("/start-registration")
-    public ResponseEntity<HttpStatus> startRegistration(@RequestBody StartRegistrationRequest startRegistrationRequest) {
+    public ResponseEntity<HttpStatus> startRegistration(@RequestBody EmailRequest startRegistrationRequest) {
         userService.startRegistration(startRegistrationRequest);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PostMapping("/start-login")
-    public ResponseEntity<HttpStatus> startLogin(@RequestBody StartLoginRequest startLoginRequest) {
+    public ResponseEntity<HttpStatus> startLogin(@RequestBody EmailRequest startLoginRequest) {
         userService.startLogin(startLoginRequest);
         return ResponseEntity.ok(HttpStatus.OK);
     }
@@ -44,7 +43,24 @@ public class AuthController {
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity login(@RequestBody AuthenticationRequest authenticationRequest) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody AuthenticationRequest authenticationRequest) {
         return ResponseEntity.ok(userService.login(authenticationRequest));
+    }
+
+    @PostMapping("/sign-in-with-email")
+    public ResponseEntity<Map<String, String>> login(@RequestBody EmailAuthenticationRequest authenticationRequest) {
+        return ResponseEntity.ok(userService.loginWithEmail(authenticationRequest));
+    }
+
+    @PostMapping("/start-reset-password")
+    public ResponseEntity<HttpStatus> startResetPassword(@RequestBody EmailRequest emailRequest) {
+        userService.startResetPassword(emailRequest);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<HttpStatus> resetPassword(@RequestBody PasswordReseatingDTO passwordDTO) {
+        userService.resetPassword(passwordDTO);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 }

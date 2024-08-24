@@ -10,6 +10,10 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class StartLoginRequest {
+public class EmailAuthenticationRequest {
     String email;
+
+    String password;
+
+    Integer code;
 }
