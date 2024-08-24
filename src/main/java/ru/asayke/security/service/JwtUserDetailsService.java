@@ -1,7 +1,6 @@
 package ru.asayke.security.service;
 
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,7 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.asayke.entity.ApplicationUser;
 import ru.asayke.security.JwtUserFactory;
-import ru.asayke.service.ApplicationUserService;
+import ru.asayke.service.interfaces.ApplicationUserService;
 
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)

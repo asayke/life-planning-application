@@ -3,7 +3,6 @@ package ru.asayke.service.implementation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.asayke.dto.ScheduledEventDto;
@@ -12,7 +11,7 @@ import ru.asayke.entity.ScheduledEvent;
 import ru.asayke.exception.ApplicationUserNotFoundException;
 import ru.asayke.repository.ApplicationUserRepository;
 import ru.asayke.repository.ScheduledEventRepository;
-import ru.asayke.service.ScheduledEventService;
+import ru.asayke.service.interfaces.ScheduledEventService;
 import ru.asayke.util.MapperUtils;
 
 import java.text.ParseException;

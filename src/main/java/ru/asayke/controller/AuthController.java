@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.asayke.dto.AuthenticationRequest;
 import ru.asayke.dto.RegistrationRequest;
-import ru.asayke.service.ApplicationUserService;
+import ru.asayke.dto.StartRegistrationRequest;
+import ru.asayke.service.interfaces.ApplicationUserService;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +22,12 @@ import ru.asayke.service.ApplicationUserService;
 public class AuthController {
 
     ApplicationUserService userService;
+
+    @PostMapping("/start")
+    public ResponseEntity<HttpStatus> startRegistration(@RequestBody StartRegistrationRequest startRegistrationRequest) {
+        userService.startRegistration(startRegistrationRequest);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
 
     @PostMapping("/sign-up")
     public ResponseEntity<HttpStatus> register(@RequestBody RegistrationRequest request, BindingResult bindingResult) {

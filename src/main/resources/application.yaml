@@ -10,7 +10,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         show_sql: 'true'
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
     enabled: false

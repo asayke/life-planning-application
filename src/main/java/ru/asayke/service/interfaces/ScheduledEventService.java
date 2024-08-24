@@ -1,4 +1,4 @@
-package ru.asayke.service;
+package ru.asayke.service.interfaces;
 
 import ru.asayke.dto.ScheduledEventDto;
 import ru.asayke.entity.ApplicationUser;

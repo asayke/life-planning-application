@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.asayke.dto.ScheduledEventDto;
-import ru.asayke.service.ScheduledEventService;
+import ru.asayke.service.interfaces.ScheduledEventService;
 
 import java.security.Principal;
 import java.util.List;

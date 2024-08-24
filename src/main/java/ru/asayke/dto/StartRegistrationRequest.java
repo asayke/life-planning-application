@@ -10,12 +10,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RegistrationRequest {
-    String username;
-    String firstName;
-    String surname;
-    String patronymic;
+public class StartRegistrationRequest {
     String email;
-    String password;
-    Integer code;
 }

@@ -18,9 +18,8 @@ public class RegistrationApprovingCode {
     Long id;
 
     @Column(name = "code")
-    Long code;
+    Integer code;
 
-    @OneToOne
-    @JoinColumn(name = "application_user_id")
-    ApplicationUser applicationUser;
+    @Column(name = "email")
+    String email;
 }

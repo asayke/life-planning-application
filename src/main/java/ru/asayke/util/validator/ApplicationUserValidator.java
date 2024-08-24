@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import ru.asayke.entity.ApplicationUser;
-import ru.asayke.service.ApplicationUserService;
+import ru.asayke.service.interfaces.ApplicationUserService;
 
 @Component
 @RequiredArgsConstructor

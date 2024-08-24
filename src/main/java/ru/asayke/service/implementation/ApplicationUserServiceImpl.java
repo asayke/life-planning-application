@@ -8,13 +8,19 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import ru.asayke.dto.AuthenticationRequest;
 import ru.asayke.dto.RegistrationRequest;
+import ru.asayke.dto.StartRegistrationRequest;
 import ru.asayke.entity.ApplicationUser;
+import ru.asayke.entity.RegistrationApprovingCode;
+import ru.asayke.exception.ApplicationUserValidationException;
+import ru.asayke.exception.ServerInternalError;
 import ru.asayke.repository.ApplicationUserRepository;
 import ru.asayke.security.JwtTokenProvider;
-import ru.asayke.service.ApplicationUserService;
+import ru.asayke.service.interfaces.ApplicationUserService;
+import ru.asayke.service.interfaces.RegistrationCodeService;
 import ru.asayke.util.ErrorsUtils;
 import ru.asayke.util.MapperUtils;
 import ru.asayke.util.validator.RegistrationValidator;
@@ -29,6 +35,8 @@ import java.util.Optional;
 public class ApplicationUserServiceImpl implements ApplicationUserService {
 
     ApplicationUserRepository userRepository;
+
+    RegistrationCodeService registrationCodeService;
 
     RegistrationValidator registrationValidator;
 
@@ -49,11 +57,19 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
     }
 
     @Override
+    @Transactional
     public void register(RegistrationRequest request, BindingResult bindingResult) {
         registrationValidator.validate(request, bindingResult);
 
         if (bindingResult.hasErrors()) {
             ErrorsUtils.returnErrorsToClient(bindingResult);
+        }
+
+        RegistrationApprovingCode registrationApprovingCode = registrationCodeService.findByEmail(request.getEmail())
+                .orElseThrow(() -> new ServerInternalError("Something went wrong"));
+
+        if (!registrationApprovingCode.getEmail().equals(request.getEmail()) || !registrationApprovingCode.getCode().equals(request.getCode())) {
+            throw new ApplicationUserValidationException("Invalid registration code");
         }
 
         request.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -75,4 +91,13 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
 
             return response;
         }
+
+    @Override
+    public void startRegistration(StartRegistrationRequest startRegistrationRequest) {
+        if (userRepository.findByEmail(startRegistrationRequest.getEmail()).isPresent()) {
+            throw new ApplicationUserValidationException(String.format("User with email %s already exists", startRegistrationRequest.getEmail()));
+        }
+
+        registrationCodeService.createCode(startRegistrationRequest.getEmail());
+    }
 }
