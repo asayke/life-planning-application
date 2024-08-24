@@ -6,7 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import ru.asayke.dto.RegistrationRequest;
+import ru.asayke.dto.auth.RegistrationRequest;
 import ru.asayke.repository.ApplicationUserRepository;
 
 @Component

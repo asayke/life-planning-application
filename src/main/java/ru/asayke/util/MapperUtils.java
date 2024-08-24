@@ -1,6 +1,6 @@
 package ru.asayke.util;
 
-import ru.asayke.dto.RegistrationRequest;
+import ru.asayke.dto.auth.RegistrationRequest;
 import ru.asayke.dto.ScheduledEventDto;
 import ru.asayke.entity.ApplicationUser;
 import ru.asayke.entity.ScheduledEvent;

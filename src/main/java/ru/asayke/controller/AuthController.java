@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.asayke.dto.AuthenticationRequest;
-import ru.asayke.dto.RegistrationRequest;
-import ru.asayke.dto.StartRegistrationRequest;
+import ru.asayke.dto.auth.AuthenticationRequest;
+import ru.asayke.dto.auth.RegistrationRequest;
+import ru.asayke.dto.auth.StartLoginRequest;
+import ru.asayke.dto.auth.StartRegistrationRequest;
 import ru.asayke.service.interfaces.ApplicationUserService;
 
 @RestController
@@ -23,9 +24,15 @@ public class AuthController {
 
     ApplicationUserService userService;
 
-    @PostMapping("/start")
+    @PostMapping("/start-registration")
     public ResponseEntity<HttpStatus> startRegistration(@RequestBody StartRegistrationRequest startRegistrationRequest) {
         userService.startRegistration(startRegistrationRequest);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PostMapping("/start-login")
+    public ResponseEntity<HttpStatus> startLogin(@RequestBody StartLoginRequest startLoginRequest) {
+        userService.startLogin(startLoginRequest);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 

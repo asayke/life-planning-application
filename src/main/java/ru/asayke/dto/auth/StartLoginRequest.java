@@ -1,4 +1,4 @@
-package ru.asayke.dto;
+package ru.asayke.dto.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -10,6 +10,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class StartRegistrationRequest {
+public class StartLoginRequest {
     String email;
 }

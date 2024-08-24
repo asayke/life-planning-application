@@ -10,11 +10,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
-import ru.asayke.dto.AuthenticationRequest;
-import ru.asayke.dto.RegistrationRequest;
-import ru.asayke.dto.StartRegistrationRequest;
+import ru.asayke.dto.auth.AuthenticationRequest;
+import ru.asayke.dto.auth.RegistrationRequest;
+import ru.asayke.dto.auth.StartLoginRequest;
+import ru.asayke.dto.auth.StartRegistrationRequest;
 import ru.asayke.entity.ApplicationUser;
+import ru.asayke.entity.LoginApprovingCode;
 import ru.asayke.entity.RegistrationApprovingCode;
+import ru.asayke.exception.ApplicationUserNotFoundException;
 import ru.asayke.exception.ApplicationUserValidationException;
 import ru.asayke.exception.ServerInternalError;
 import ru.asayke.repository.ApplicationUserRepository;
@@ -37,6 +40,8 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
     ApplicationUserRepository userRepository;
 
     RegistrationCodeService registrationCodeService;
+
+    LoginApprovingCodeServiceImpl loginApprovingCodeService;
 
     RegistrationValidator registrationValidator;
 
@@ -81,16 +86,26 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
 
     @Override
     public Map<String, String> login(AuthenticationRequest authenticationRequest) {
-            String username = authenticationRequest.getUsername();
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, authenticationRequest.getPassword()));
-            ApplicationUser user = userRepository.findByUsername(username).orElseThrow(() -> new BadCredentialsException("Invalid username or password"));
+        ApplicationUser applicationUser = userRepository.findByUsername(authenticationRequest.getUsername())
+                .orElseThrow(() -> new ApplicationUserNotFoundException("User not found"));
 
-            String token = jwtTokenProvider.createToken(username, List.of(user.getRole()));
+        LoginApprovingCode byEmail = loginApprovingCodeService.findByEmail(applicationUser.getEmail())
+                .orElseThrow(() -> new ServerInternalError("Login code not found"));
 
-            Map<String, String> response = Map.of("token", token);
-
-            return response;
+        if (!authenticationRequest.getCode().equals(byEmail.getCode())) {
+            throw new ApplicationUserValidationException("Login code is wrong");
         }
+
+        String username = authenticationRequest.getUsername();
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, authenticationRequest.getPassword()));
+        ApplicationUser user = userRepository.findByUsername(username).orElseThrow(() -> new BadCredentialsException("Invalid username or password"));
+
+        String token = jwtTokenProvider.createToken(username, List.of(user.getRole()));
+
+        Map<String, String> response = Map.of("token", token);
+
+        return response;
+    }
 
     @Override
     public void startRegistration(StartRegistrationRequest startRegistrationRequest) {
@@ -99,5 +114,10 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
         }
 
         registrationCodeService.createCode(startRegistrationRequest.getEmail());
+    }
+
+    @Override
+    public void startLogin(StartLoginRequest startLoginRequest) {
+        loginApprovingCodeService.createCode(startLoginRequest.getEmail());
     }
 }

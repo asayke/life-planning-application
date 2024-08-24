@@ -1,9 +1,10 @@
 package ru.asayke.service.interfaces;
 
 import org.springframework.validation.BindingResult;
-import ru.asayke.dto.AuthenticationRequest;
-import ru.asayke.dto.RegistrationRequest;
-import ru.asayke.dto.StartRegistrationRequest;
+import ru.asayke.dto.auth.AuthenticationRequest;
+import ru.asayke.dto.auth.RegistrationRequest;
+import ru.asayke.dto.auth.StartLoginRequest;
+import ru.asayke.dto.auth.StartRegistrationRequest;
 import ru.asayke.entity.ApplicationUser;
 
 import java.util.Map;
@@ -19,4 +20,6 @@ public interface ApplicationUserService {
     Map<String, String> login(AuthenticationRequest authenticationRequest);
 
     void startRegistration(StartRegistrationRequest startRegistrationRequest);
+
+    void startLogin(StartLoginRequest startLoginRequest);
 }

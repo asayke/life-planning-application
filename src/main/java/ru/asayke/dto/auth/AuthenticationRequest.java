@@ -1,4 +1,4 @@
-package ru.asayke.dto;
+package ru.asayke.dto.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -10,12 +10,10 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RegistrationRequest {
+public class AuthenticationRequest {
     String username;
-    String firstName;
-    String surname;
-    String patronymic;
-    String email;
+
     String password;
+
     Integer code;
 }
