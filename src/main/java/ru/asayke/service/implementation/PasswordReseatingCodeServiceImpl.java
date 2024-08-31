@@ -18,15 +18,19 @@ public class PasswordReseatingCodeServiceImpl implements PasswordReseatingCodeSe
     PasswordReseatingCodeRepository passwordReseatingCodeRepository;
 
     @Override
-    public void createCode(String email) {
+    public int create(String email) {
         findByEmail(email);
 
         PasswordReseatingCode passwordReseatingCode = new PasswordReseatingCode();
 
-        passwordReseatingCode.setCode(ThreadLocalRandom.current().nextInt(100000, 1000000));
+        int code = ThreadLocalRandom.current().nextInt(100000, 1000000);
+
+        passwordReseatingCode.setCode(code);
         passwordReseatingCode.setEmail(email);
 
         passwordReseatingCodeRepository.save(passwordReseatingCode);
+
+        return code;
     }
 
     @Override

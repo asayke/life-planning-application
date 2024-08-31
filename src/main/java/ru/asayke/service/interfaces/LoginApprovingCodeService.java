@@ -4,8 +4,6 @@ import ru.asayke.entity.LoginApprovingCode;
 
 import java.util.Optional;
 
-public interface LoginApprovingCodeService {
-    void createCode(String email);
-
+public interface LoginApprovingCodeService extends ICreatableCode {
     Optional<LoginApprovingCode> findByEmail(String email);
 }

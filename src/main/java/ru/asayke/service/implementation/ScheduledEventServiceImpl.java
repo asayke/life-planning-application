@@ -3,14 +3,17 @@ package ru.asayke.service.implementation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.asayke.dto.ScheduledEventDto;
+import ru.asayke.dto.kafka.EmailMessageKafkaDTO;
 import ru.asayke.entity.ApplicationUser;
 import ru.asayke.entity.ScheduledEvent;
 import ru.asayke.exception.ApplicationUserNotFoundException;
 import ru.asayke.repository.ApplicationUserRepository;
 import ru.asayke.repository.ScheduledEventRepository;
+import ru.asayke.service.implementation.kafka.KafkaMessagingService;
 import ru.asayke.service.interfaces.ScheduledEventService;
 import ru.asayke.util.MapperUtils;
 
@@ -26,15 +29,27 @@ import java.util.List;
 public class ScheduledEventServiceImpl implements ScheduledEventService {
     ScheduledEventRepository scheduledEventRepository;
     ApplicationUserRepository applicationUserRepository;
+    KafkaMessagingService kafkaMessagingService;
 
     @Override
-//    @Scheduled(cron = "0 * * * * *")
+    @Scheduled(cron = "0 * * * * *")
     public void checkScheduledEvents() {
         List<ScheduledEvent> scheduledEvents = scheduledEventRepository
                 .findAllByDateBeforeAndHasPassed(Date.from(Instant.now()), false);
 
         for (ScheduledEvent scheduledEvent : scheduledEvents) {
-            // TODO do some good things there
+            ApplicationUser applicationUser = applicationUserRepository.findByScheduledEvents(List.of(scheduledEvent))
+                    .orElseThrow(() -> new ApplicationUserNotFoundException("User not found"));
+
+            scheduledEvent.setHasPassed(true);
+            scheduledEventRepository.save(scheduledEvent);
+
+            EmailMessageKafkaDTO kafkaDTO = new EmailMessageKafkaDTO(
+                    applicationUser.getEmail(),
+                    String.format("Your event with title %s has already expired!", scheduledEvent.getTitle())
+            );
+
+            kafkaMessagingService.sendMessage(kafkaDTO);
         }
     }
 

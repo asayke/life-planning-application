@@ -1,4 +1,14 @@
+server:
+  port: ${SERVER_PORT}
+
 spring:
+  kafka:
+    producer:
+      bootstrap-servers: ${KAFKA_HOST}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.JsonSerializer
+    topic:
+      name: ${TOPIC_NAME}
   datasource:
     driver-class-name: org.postgresql.Driver
     username: ${DATASOURCE_USERNAME}
@@ -18,8 +28,3 @@ jwt:
   token:
     secret: ${JWT_SECRET}
     expired: ${JWT_EXPIRED}
-
-kafka:
-  topic:
-    registration-topic: registration
-    notification-topic: notification

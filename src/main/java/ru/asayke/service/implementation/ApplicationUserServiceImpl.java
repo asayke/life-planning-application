@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import ru.asayke.dto.auth.*;
+import ru.asayke.dto.kafka.EmailMessageKafkaDTO;
 import ru.asayke.entity.ApplicationUser;
 import ru.asayke.entity.LoginApprovingCode;
 import ru.asayke.entity.RegistrationApprovingCode;
@@ -19,6 +20,7 @@ import ru.asayke.exception.ApplicationUserValidationException;
 import ru.asayke.exception.ServerInternalError;
 import ru.asayke.repository.ApplicationUserRepository;
 import ru.asayke.security.JwtTokenProvider;
+import ru.asayke.service.implementation.kafka.KafkaMessagingService;
 import ru.asayke.service.interfaces.ApplicationUserService;
 import ru.asayke.service.interfaces.PasswordReseatingCodeService;
 import ru.asayke.service.interfaces.RegistrationCodeService;
@@ -52,6 +54,8 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
     AuthenticationManager authenticationManager;
 
     BCryptPasswordEncoder passwordEncoder;
+
+    KafkaMessagingService kafkaMessagingService;
 
     @Override
     public Optional<ApplicationUser> findByUsername(String username) {
@@ -135,7 +139,13 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
 
     @Override
     public void startResetPassword(EmailRequest emailRequest) {
-        registrationCodeService.createCode(emailRequest.getEmail());
+        int resetCode = registrationCodeService.create(emailRequest.getEmail());
+
+        EmailMessageKafkaDTO kafkaDTO = new EmailMessageKafkaDTO(
+                emailRequest.getEmail(), String.format("Your registration code is %s", resetCode)
+        );
+
+        kafkaMessagingService.sendMessage(kafkaDTO);
     }
 
     @Override
@@ -154,11 +164,23 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
             throw new ApplicationUserValidationException(String.format("User with email %s already exists", startRegistrationRequest.getEmail()));
         }
 
-        registrationCodeService.createCode(startRegistrationRequest.getEmail());
+        int registrationCode = registrationCodeService.create(startRegistrationRequest.getEmail());
+
+        EmailMessageKafkaDTO kafkaDTO = new EmailMessageKafkaDTO(
+                startRegistrationRequest.getEmail(), String.format("Your registration code is %s", registrationCode)
+        );
+
+        kafkaMessagingService.sendMessage(kafkaDTO);
     }
 
     @Override
     public void startLogin(EmailRequest startLoginRequest) {
-        loginApprovingCodeService.createCode(startLoginRequest.getEmail());
+        int loginCode = loginApprovingCodeService.create(startLoginRequest.getEmail());
+
+        EmailMessageKafkaDTO kafkaDTO = new EmailMessageKafkaDTO(
+                startLoginRequest.getEmail(), String.format("Your login code is %s", loginCode)
+        );
+
+        kafkaMessagingService.sendMessage(kafkaDTO);
     }
 }

@@ -19,7 +19,7 @@ public class LoginApprovingCodeServiceImpl implements LoginApprovingCodeService 
     LoginApprovingCodeRepository loginApprovingCodeRepository;
 
     @Override
-    public void createCode(String email) {
+    public int create(String email) {
         if (loginApprovingCodeRepository.findByEmail(email).isPresent()) {
             throw new ApplicationUserValidationException("Login code already exists");
         }
@@ -27,9 +27,13 @@ public class LoginApprovingCodeServiceImpl implements LoginApprovingCodeService 
         LoginApprovingCode loginApprovingCode = new LoginApprovingCode();
 
         loginApprovingCode.setEmail(email);
-        loginApprovingCode.setCode(ThreadLocalRandom.current().nextInt(100000, 1000000));
 
+        int code = ThreadLocalRandom.current().nextInt(100000, 1000000);
+
+        loginApprovingCode.setCode(code);
         loginApprovingCodeRepository.save(loginApprovingCode);
+
+        return code;
     }
 
     @Override

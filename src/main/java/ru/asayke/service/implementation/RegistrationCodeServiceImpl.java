@@ -19,17 +19,21 @@ public class RegistrationCodeServiceImpl implements RegistrationCodeService {
     RegistrationApprovingCodeRepository registrationApprovingCodeRepository;
 
     @Override
-    public void createCode(String email) {
+    public int create(String email) {
         if (registrationApprovingCodeRepository.findByEmail(email).isPresent()) {
             throw new ApplicationUserValidationException("Registration code already exists");
         }
 
         RegistrationApprovingCode registrationApprovingCode = new RegistrationApprovingCode();
 
-        registrationApprovingCode.setCode(ThreadLocalRandom.current().nextInt(100000, 1000000));
+        int code = ThreadLocalRandom.current().nextInt(100000, 1000000);
+
+        registrationApprovingCode.setCode(code);
         registrationApprovingCode.setEmail(email);
 
         registrationApprovingCodeRepository.save(registrationApprovingCode);
+
+        return code;
     }
 
     @Override
