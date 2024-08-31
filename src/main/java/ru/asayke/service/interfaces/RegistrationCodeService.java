@@ -6,4 +6,6 @@ import java.util.Optional;
 
 public interface RegistrationCodeService extends ICreatableCode {
     Optional<RegistrationApprovingCode> findByEmail(String email);
+
+    void deleteById(Long id);
 }

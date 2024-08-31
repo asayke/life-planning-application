@@ -40,4 +40,9 @@ public class RegistrationCodeServiceImpl implements RegistrationCodeService {
     public Optional<RegistrationApprovingCode> findByEmail(String email) {
         return registrationApprovingCodeRepository.findByEmail(email);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        registrationApprovingCodeRepository.deleteById(id);
+    }
 }

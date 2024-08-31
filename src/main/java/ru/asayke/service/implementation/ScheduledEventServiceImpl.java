@@ -34,24 +34,22 @@ public class ScheduledEventServiceImpl implements ScheduledEventService {
     @Override
     @Scheduled(cron = "0 * * * * *")
     public void checkScheduledEvents() {
-//        List<ScheduledEvent> scheduledEvents = scheduledEventRepository
-//                .findAllByDateBeforeAndHasPassed(Date.from(Instant.now()), false);
-//
-//        for (ScheduledEvent scheduledEvent : scheduledEvents) {
-//            ApplicationUser applicationUser = applicationUserRepository.findByScheduledEvents(List.of(scheduledEvent))
-//                    .orElseThrow(() -> new ApplicationUserNotFoundException("User not found"));
-//
-//            scheduledEvent.setHasPassed(true);
-//            scheduledEventRepository.save(scheduledEvent);
-//
-//            EmailEvent kafkaDTO = new EmailEvent(
-//                    applicationUser.getEmail(),
-//                    "You're wrong!",
-//                    String.format("Your event with title %s has already expired!", scheduledEvent.getTitle())
-//            );
-//
-//            kafkaMessagingService.sendMessage(kafkaDTO);
-//        }
+        List<ScheduledEvent> scheduledEvents = scheduledEventRepository
+                .findAllByDateBeforeAndHasPassed(Date.from(Instant.now()), false);
+
+        for (ScheduledEvent scheduledEvent : scheduledEvents) {
+            ApplicationUser applicationUser = scheduledEvent.getApplicationUser();
+            scheduledEvent.setHasPassed(true);
+            scheduledEventRepository.save(scheduledEvent);
+
+            EmailEvent kafkaDTO = new EmailEvent(
+                    applicationUser.getEmail(),
+                    "You're wrong!",
+                    String.format("Your event with title %s has already expired!", scheduledEvent.getTitle())
+            );
+
+            kafkaMessagingService.sendMessage(kafkaDTO);
+        }
     }
 
     @Override

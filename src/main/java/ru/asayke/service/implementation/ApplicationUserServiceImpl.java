@@ -14,6 +14,7 @@ import ru.asayke.dto.auth.*;
 import ru.asayke.dto.kafka.EmailEvent;
 import ru.asayke.entity.ApplicationUser;
 import ru.asayke.entity.LoginApprovingCode;
+import ru.asayke.entity.PasswordReseatingCode;
 import ru.asayke.entity.RegistrationApprovingCode;
 import ru.asayke.exception.ApplicationUserNotFoundException;
 import ru.asayke.exception.ApplicationUserValidationException;
@@ -101,7 +102,7 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
         if (!authenticationRequest.getCode().equals(byEmail.getCode())) {
             throw new ApplicationUserValidationException("Login code is wrong");
         } else {
-            //TODO delete code after succes
+            loginApprovingCodeService.deleteById(byEmail.getId());
         }
 
         String username = authenticationRequest.getUsername();
@@ -126,7 +127,7 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
         if (!authenticationRequest.getCode().equals(byEmail.getCode())) {
             throw new ApplicationUserValidationException("Login code is wrong");
         } else {
-            //TODO delete code after succes
+            loginApprovingCodeService.deleteById(byEmail.getId());
         }
 
         String username = applicationUser.getUsername();
@@ -159,8 +160,13 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
         ApplicationUser applicationUser = userRepository.findByEmail(passwordDTO.getEmail())
                 .orElseThrow(() -> new ApplicationUserNotFoundException("User not found"));
 
-        if (passwordReseatingCodeService.findByEmail(passwordDTO.getEmail()).equals(passwordDTO.getCode())) {
+        PasswordReseatingCode byEmail = passwordReseatingCodeService.findByEmail(passwordDTO.getEmail());
+
+        if (byEmail.getCode().equals(passwordDTO.getCode())) {
             applicationUser.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
+            passwordReseatingCodeService.deleteById(byEmail.getId());
+        } else {
+            throw new ApplicationUserValidationException("Reset code is wrong");
         }
     }
 

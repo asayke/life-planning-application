@@ -40,4 +40,9 @@ public class LoginApprovingCodeServiceImpl implements LoginApprovingCodeService 
     public Optional<LoginApprovingCode> findByEmail(String email) {
         return loginApprovingCodeRepository.findByEmail(email);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        loginApprovingCodeRepository.deleteById(id);
+    }
 }

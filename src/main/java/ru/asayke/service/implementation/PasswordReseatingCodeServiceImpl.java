@@ -38,4 +38,9 @@ public class PasswordReseatingCodeServiceImpl implements PasswordReseatingCodeSe
         return passwordReseatingCodeRepository.findByEmail(email)
                 .orElseThrow(() -> new ApplicationUserValidationException("Reset code already exists"));
     }
+
+    @Override
+    public void deleteById(Long id) {
+        passwordReseatingCodeRepository.deleteById(id);
+    }
 }

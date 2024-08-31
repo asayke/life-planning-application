@@ -6,4 +6,6 @@ import java.util.Optional;
 
 public interface LoginApprovingCodeService extends ICreatableCode {
     Optional<LoginApprovingCode> findByEmail(String email);
+
+    void deleteById(Long id);
 }
