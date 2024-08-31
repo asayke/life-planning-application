@@ -10,18 +10,18 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
-import ru.asayke.dto.kafka.EmailMessageKafkaDTO;
+import ru.asayke.dto.kafka.EmailEvent;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class KafkaMessagingService {
-    KafkaTemplate<String, EmailMessageKafkaDTO> kafkaTemplate;
+    KafkaTemplate<String, EmailEvent> kafkaTemplate;
     NewTopic topic;
 
-    public void sendMessage(EmailMessageKafkaDTO kafkaCommonDTO) {
-        Message<EmailMessageKafkaDTO> message = MessageBuilder
+    public void sendMessage(EmailEvent kafkaCommonDTO) {
+        Message<EmailEvent> message = MessageBuilder
                 .withPayload(kafkaCommonDTO)
                 .setHeader(KafkaHeaders.TOPIC, topic.name())
                 .build();

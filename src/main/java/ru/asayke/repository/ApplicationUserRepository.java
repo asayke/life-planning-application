@@ -14,5 +14,5 @@ public interface ApplicationUserRepository extends JpaRepository<ApplicationUser
 
     Optional<ApplicationUser> findByEmail(String email);
 
-    Optional<ApplicationUser> findByScheduledEvents(List<ScheduledEvent> scheduledEvent);
+//    Optional<ApplicationUser> findByScheduledEvents(List<ScheduledEvent> scheduledEvent);
 }

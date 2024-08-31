@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.asayke.dto.ScheduledEventDto;
-import ru.asayke.dto.kafka.EmailMessageKafkaDTO;
+import ru.asayke.dto.kafka.EmailEvent;
 import ru.asayke.entity.ApplicationUser;
 import ru.asayke.entity.ScheduledEvent;
 import ru.asayke.exception.ApplicationUserNotFoundException;
@@ -34,23 +34,24 @@ public class ScheduledEventServiceImpl implements ScheduledEventService {
     @Override
     @Scheduled(cron = "0 * * * * *")
     public void checkScheduledEvents() {
-        List<ScheduledEvent> scheduledEvents = scheduledEventRepository
-                .findAllByDateBeforeAndHasPassed(Date.from(Instant.now()), false);
-
-        for (ScheduledEvent scheduledEvent : scheduledEvents) {
-            ApplicationUser applicationUser = applicationUserRepository.findByScheduledEvents(List.of(scheduledEvent))
-                    .orElseThrow(() -> new ApplicationUserNotFoundException("User not found"));
-
-            scheduledEvent.setHasPassed(true);
-            scheduledEventRepository.save(scheduledEvent);
-
-            EmailMessageKafkaDTO kafkaDTO = new EmailMessageKafkaDTO(
-                    applicationUser.getEmail(),
-                    String.format("Your event with title %s has already expired!", scheduledEvent.getTitle())
-            );
-
-            kafkaMessagingService.sendMessage(kafkaDTO);
-        }
+//        List<ScheduledEvent> scheduledEvents = scheduledEventRepository
+//                .findAllByDateBeforeAndHasPassed(Date.from(Instant.now()), false);
+//
+//        for (ScheduledEvent scheduledEvent : scheduledEvents) {
+//            ApplicationUser applicationUser = applicationUserRepository.findByScheduledEvents(List.of(scheduledEvent))
+//                    .orElseThrow(() -> new ApplicationUserNotFoundException("User not found"));
+//
+//            scheduledEvent.setHasPassed(true);
+//            scheduledEventRepository.save(scheduledEvent);
+//
+//            EmailEvent kafkaDTO = new EmailEvent(
+//                    applicationUser.getEmail(),
+//                    "You're wrong!",
+//                    String.format("Your event with title %s has already expired!", scheduledEvent.getTitle())
+//            );
+//
+//            kafkaMessagingService.sendMessage(kafkaDTO);
+//        }
     }
 
     @Override
