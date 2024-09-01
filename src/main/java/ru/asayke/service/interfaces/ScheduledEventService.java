@@ -11,4 +11,6 @@ public interface ScheduledEventService {
     List<ScheduledEventDto> findAllByCurrentUser(String username);
 
     void createNewScheduledEvent(ScheduledEventDto scheduledEventDto, String username);
+
+    List<ScheduledEventDto> findAllByCurrentUserWithSorting(String name, String sortOrder, String sortBy);
 }

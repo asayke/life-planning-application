@@ -25,6 +25,11 @@ public class ScheduledEventController {
         return ResponseEntity.ok(scheduledEventService.findAllByCurrentUser(principal.getName()));
     }
 
+    @GetMapping("/{sortOrder}/{sortBy}")
+    public ResponseEntity<List<ScheduledEventDto>> findAllByCurrentUserWithSorting(Principal principal, @PathVariable(value = "sortOrder", required = false) String sortOrder, @PathVariable(value = "sortBy", required = false) String sortBy) {
+        return ResponseEntity.ok(scheduledEventService.findAllByCurrentUserWithSorting(principal.getName(), sortOrder, sortBy));
+    }
+
     @PostMapping
     public ResponseEntity<HttpStatus> createNewScheduledEvent(@RequestBody ScheduledEventDto scheduledEventDto, Principal principal) {
         scheduledEventService.createNewScheduledEvent(scheduledEventDto, principal.getName());

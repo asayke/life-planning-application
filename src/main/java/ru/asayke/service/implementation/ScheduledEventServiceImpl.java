@@ -3,6 +3,7 @@ package ru.asayke.service.implementation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,7 +11,9 @@ import ru.asayke.dto.ScheduledEventDto;
 import ru.asayke.dto.kafka.EmailEvent;
 import ru.asayke.entity.ApplicationUser;
 import ru.asayke.entity.ScheduledEvent;
+import ru.asayke.entity.enums.ScheduledEventAvailableToOrderByFields;
 import ru.asayke.exception.ApplicationUserNotFoundException;
+import ru.asayke.exception.ScheduledEventFieldDoesNotExists;
 import ru.asayke.repository.ApplicationUserRepository;
 import ru.asayke.repository.ScheduledEventRepository;
 import ru.asayke.service.implementation.kafka.KafkaMessagingService;
@@ -20,8 +23,8 @@ import ru.asayke.util.MapperUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -85,6 +88,27 @@ public class ScheduledEventServiceImpl implements ScheduledEventService {
         }
 
         scheduledEventRepository.save(scheduledEvent);
+    }
+
+    @Override
+    public List<ScheduledEventDto> findAllByCurrentUserWithSorting(String username, String sortOrder, String sortBy) {
+        boolean fieldIsAvailable = Stream.of(ScheduledEventAvailableToOrderByFields.values())
+                .map(Enum::name).anyMatch(field -> field.equals(sortBy));
+
+        if (fieldIsAvailable) {
+            throw new ScheduledEventFieldDoesNotExists(String.format("Field with name %s does not exists", sortBy));
+        }
+
+        ApplicationUser applicationUser = findUserOrThrowException(username);
+
+        Sort sort = Sort.by(Sort.Direction.valueOf(sortOrder.toUpperCase()), sortBy);
+
+        return scheduledEventRepository
+                .findAll(sort)
+                .stream()
+                .filter(event -> event.getApplicationUser().equals(applicationUser))
+                .map(MapperUtils::convertScheduledEventToDto)
+                .toList();
     }
 
     private ApplicationUser findUserOrThrowException(String username) {
