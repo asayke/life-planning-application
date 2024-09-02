@@ -13,6 +13,4 @@ public interface ScheduledEventRepository extends JpaRepository<ScheduledEvent, 
     List<ScheduledEvent> findAllByDateBeforeAndHasPassed(Date date, boolean hasPassed);
 
     List<ScheduledEvent> findAllByApplicationUser(ApplicationUser applicationUser);
-
-    List<ScheduledEvent> findAllByApplicationUserOrderBy(ApplicationUser applicationUser);
 }
