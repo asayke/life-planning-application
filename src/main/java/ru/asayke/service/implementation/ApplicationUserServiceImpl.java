@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
+import ru.asayke.dto.ApplicationUserDto;
 import ru.asayke.dto.auth.*;
 import ru.asayke.dto.kafka.EmailEvent;
 import ru.asayke.entity.ApplicationUser;
@@ -168,6 +169,13 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
         } else {
             throw new ApplicationUserValidationException("Reset code is wrong");
         }
+    }
+
+    @Override
+    public ApplicationUserDto getMyProfile(String username) {
+        return MapperUtils.convertUserToDto(findByUsername(username)
+                .orElseThrow(() -> new ApplicationUserNotFoundException("User not found"))
+        );
     }
 
     @Override

@@ -1,5 +1,6 @@
 package ru.asayke.util;
 
+import ru.asayke.dto.ApplicationUserDto;
 import ru.asayke.dto.auth.RegistrationRequest;
 import ru.asayke.dto.ScheduledEventDto;
 import ru.asayke.entity.ApplicationUser;
@@ -27,6 +28,7 @@ public class MapperUtils {
     public static ScheduledEventDto convertScheduledEventToDto(ScheduledEvent scheduledEvent) {
         ScheduledEventDto scheduledEventDto = new ScheduledEventDto();
 
+        scheduledEventDto.setId(scheduledEvent.getId());
         scheduledEventDto.setTitle(scheduledEvent.getTitle());
         scheduledEventDto.setDescription(scheduledEvent.getDescription());
         scheduledEventDto.setPriority(scheduledEvent.getPriority());
@@ -36,7 +38,18 @@ public class MapperUtils {
         return scheduledEventDto;
     }
 
-    public static ApplicationUser convertApplicationUserDtoToApplicationUser() {
-        return new ApplicationUser();
+    public static ApplicationUserDto convertUserToDto(ApplicationUser applicationUser) {
+        ApplicationUserDto userDto = new ApplicationUserDto();
+
+        userDto.setId(applicationUser.getId());
+        userDto.setEmail(applicationUser.getEmail());
+        userDto.setUsername(applicationUser.getUsername());
+        userDto.setFirstName(applicationUser.getFirstName());
+        userDto.setSurname(applicationUser.getSurname());
+        userDto.setPatronymic(applicationUser.getPatronymic());
+        userDto.setRole(applicationUser.getRole());
+        userDto.setStatus(applicationUser.getStatus());
+
+        return userDto;
     }
 }

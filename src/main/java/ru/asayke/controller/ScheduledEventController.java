@@ -35,4 +35,10 @@ public class ScheduledEventController {
         scheduledEventService.createNewScheduledEvent(scheduledEventDto, principal.getName());
         return ResponseEntity.ok(HttpStatus.CREATED);
     }
+
+    @PutMapping
+    public ResponseEntity<HttpStatus> updateEvent(@RequestBody ScheduledEventDto scheduledEventDto, Principal principal) {
+        scheduledEventService.updateEvent(scheduledEventDto, principal.getName());
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
 }

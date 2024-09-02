@@ -1,6 +1,7 @@
 package ru.asayke.service.interfaces;
 
 import org.springframework.validation.BindingResult;
+import ru.asayke.dto.ApplicationUserDto;
 import ru.asayke.dto.auth.*;
 import ru.asayke.entity.ApplicationUser;
 
@@ -25,4 +26,6 @@ public interface ApplicationUserService {
     void startResetPassword(EmailRequest emailRequest);
 
     void resetPassword(PasswordReseatingDTO passwordDTO);
+
+    ApplicationUserDto getMyProfile(String username);
 }

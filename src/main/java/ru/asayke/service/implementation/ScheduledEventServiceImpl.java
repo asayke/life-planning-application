@@ -111,6 +111,36 @@ public class ScheduledEventServiceImpl implements ScheduledEventService {
                 .toList();
     }
 
+    @Override
+    public ScheduledEventDto updateEvent(ScheduledEventDto scheduledEventDto, String username) {
+        ApplicationUser applicationUser = findUserOrThrowException(username);
+
+        ScheduledEvent eventById = scheduledEventRepository.findById(scheduledEventDto.getId())
+                .orElseThrow(() -> new RuntimeException("Event with such id does not exists"));
+
+        if (!Objects.equals(eventById.getApplicationUser().getId(), applicationUser.getId())) {
+            throw new RuntimeException("U cant edit this event");
+        }
+
+        eventById.setTitle(scheduledEventDto.getTitle());
+        eventById.setDescription(scheduledEventDto.getDescription());
+        eventById.setPriority(scheduledEventDto.getPriority());
+        eventById.setHasPassed(scheduledEventDto.getHasPassed());
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
+
+        try {
+            Date date = dateFormat.parse(scheduledEventDto.getDate());
+            eventById.setDate(date);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        ScheduledEvent saved = scheduledEventRepository.save(eventById);
+
+        return MapperUtils.convertScheduledEventToDto(saved);
+    }
+
     private ApplicationUser findUserOrThrowException(String username) {
         return applicationUserRepository
                 .findByUsername(username)
