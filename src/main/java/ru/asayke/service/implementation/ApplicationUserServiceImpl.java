@@ -145,7 +145,7 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
 
     @Override
     public void startResetPassword(EmailRequest emailRequest) {
-        int resetCode = registrationCodeService.create(emailRequest.getEmail());
+        int resetCode = passwordReseatingCodeService.create(emailRequest.getEmail());
 
         EmailEvent kafkaDTO = new EmailEvent(
                 emailRequest.getEmail(),

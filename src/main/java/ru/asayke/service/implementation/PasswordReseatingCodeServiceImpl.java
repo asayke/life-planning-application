@@ -19,7 +19,7 @@ public class PasswordReseatingCodeServiceImpl implements PasswordReseatingCodeSe
 
     @Override
     public int create(String email) {
-        findByEmail(email);
+        if (!existByEmail(email)) {
 
         PasswordReseatingCode passwordReseatingCode = new PasswordReseatingCode();
 
@@ -31,12 +31,18 @@ public class PasswordReseatingCodeServiceImpl implements PasswordReseatingCodeSe
         passwordReseatingCodeRepository.save(passwordReseatingCode);
 
         return code;
+        } else {
+            throw new RuntimeException("Reset code already exists");
+        }
     }
 
     @Override
     public PasswordReseatingCode findByEmail(String email) {
-        return passwordReseatingCodeRepository.findByEmail(email)
-                .orElseThrow(() -> new ApplicationUserValidationException("Reset code already exists"));
+        return passwordReseatingCodeRepository.findByEmail(email).get();
+    }
+
+    public boolean existByEmail(String email) {
+        return passwordReseatingCodeRepository.existsByEmail(email);
     }
 
     @Override

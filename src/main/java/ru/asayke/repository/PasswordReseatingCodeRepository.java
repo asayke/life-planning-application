@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface PasswordReseatingCodeRepository extends JpaRepository<PasswordReseatingCode, Long> {
     Optional<PasswordReseatingCode> findByEmail(String email);
+
+    boolean existsByEmail(String email);
 }
