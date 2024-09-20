@@ -166,6 +166,14 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
         if (byEmail.getCode().equals(passwordDTO.getCode())) {
             applicationUser.setPassword(passwordEncoder.encode(passwordDTO.getNewPassword()));
             passwordReseatingCodeService.deleteById(byEmail.getId());
+
+            EmailEvent kafkaDTO = new EmailEvent(
+                    passwordDTO.getEmail(),
+                    "Be careful!",
+                    "Your password has been changed!"
+            );
+
+            kafkaMessagingService.sendMessage(kafkaDTO);
         } else {
             throw new ApplicationUserValidationException("Reset code is wrong");
         }
