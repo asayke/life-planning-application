@@ -13,7 +13,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
 
   admin-service:
-    image: "lfp:0.1.7"
+    image: "lfp:1.0.7"
     container_name: admin-service
     ports:
       - "8081:8081"
@@ -31,10 +31,10 @@ services:
       - kafka
 
   email-service:
-    image: "lfpe:0.0.4"
+    image: "lfpe:1.0.6"
     container_name: email-service
     ports:
-      - "8080:8082"
+      - "8082:8082"
     environment:
       - KAFKA_HOST=kafka:9092
       - TOPIC_NAME=email-topic
