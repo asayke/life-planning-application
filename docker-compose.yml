@@ -41,7 +41,7 @@ services:
       - kafka
 
   email-service:
-    image: "lfpe:1.1.0"
+    image: "lfpe:1.1.2"
     container_name: email-service
     ports:
       - "8082:8082"
