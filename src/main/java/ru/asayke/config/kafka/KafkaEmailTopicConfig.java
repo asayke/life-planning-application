@@ -15,6 +15,8 @@ public class KafkaEmailTopicConfig {
     public NewTopic emailTopic() {
         return TopicBuilder
                 .name(topicName)
+                .partitions(1)
+                .replicas(1)
                 .build();
     }
 }
