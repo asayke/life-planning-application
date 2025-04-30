@@ -3,6 +3,7 @@ package ru.asayke.service.implementation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import java.time.Instant;
 import java.util.*;
 import java.util.stream.Stream;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -35,8 +37,10 @@ public class ScheduledEventServiceImpl implements ScheduledEventService {
     KafkaMessagingService kafkaMessagingService;
 
     @Override
+    @Transactional
     @Scheduled(cron = "0 * * * * *")
     public void checkScheduledEvents() {
+        log.info("---------------Scheduled events checking started---------------");
         List<ScheduledEvent> scheduledEvents = scheduledEventRepository
                 .findAllByDateBeforeAndHasPassed(Date.from(Instant.now()), false);
 
@@ -56,6 +60,7 @@ public class ScheduledEventServiceImpl implements ScheduledEventService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ScheduledEventDto> findAllByCurrentUser(String username) {
         ApplicationUser applicationUser = findUserOrThrowException(username);
 
@@ -91,6 +96,7 @@ public class ScheduledEventServiceImpl implements ScheduledEventService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ScheduledEventDto> findAllByCurrentUserWithSorting(String username, String sortOrder, String sortBy) {
         boolean fieldIsAvailable = Stream.of(ScheduledEventAvailableToOrderByFields.values())
                 .map(Enum::name).anyMatch(field -> field.equals(sortBy));
@@ -112,6 +118,7 @@ public class ScheduledEventServiceImpl implements ScheduledEventService {
     }
 
     @Override
+    @Transactional
     public ScheduledEventDto updateEvent(ScheduledEventDto scheduledEventDto, String username) {
         ApplicationUser applicationUser = findUserOrThrowException(username);
 

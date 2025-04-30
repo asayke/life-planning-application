@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.asayke.entity.LoginApprovingCode;
 import ru.asayke.exception.ApplicationUserValidationException;
 import ru.asayke.repository.LoginApprovingCodeRepository;
@@ -19,6 +20,7 @@ public class LoginApprovingCodeServiceImpl implements LoginApprovingCodeService 
     LoginApprovingCodeRepository loginApprovingCodeRepository;
 
     @Override
+    @Transactional
     public int create(String email) {
         if (loginApprovingCodeRepository.findByEmail(email).isPresent()) {
             throw new ApplicationUserValidationException("Login code already exists");
@@ -37,11 +39,13 @@ public class LoginApprovingCodeServiceImpl implements LoginApprovingCodeService 
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<LoginApprovingCode> findByEmail(String email) {
         return loginApprovingCodeRepository.findByEmail(email);
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         loginApprovingCodeRepository.deleteById(id);
     }

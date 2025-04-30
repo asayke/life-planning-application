@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.asayke.entity.RegistrationApprovingCode;
 import ru.asayke.exception.ApplicationUserValidationException;
 import ru.asayke.repository.RegistrationApprovingCodeRepository;
@@ -19,6 +20,7 @@ public class RegistrationCodeServiceImpl implements RegistrationCodeService {
     RegistrationApprovingCodeRepository registrationApprovingCodeRepository;
 
     @Override
+    @Transactional
     public int create(String email) {
         if (registrationApprovingCodeRepository.findByEmail(email).isPresent()) {
             throw new ApplicationUserValidationException("Registration code already exists");
@@ -37,11 +39,13 @@ public class RegistrationCodeServiceImpl implements RegistrationCodeService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<RegistrationApprovingCode> findByEmail(String email) {
         return registrationApprovingCodeRepository.findByEmail(email);
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         registrationApprovingCodeRepository.deleteById(id);
     }

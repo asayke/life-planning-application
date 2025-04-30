@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.asayke.entity.PasswordReseatingCode;
 import ru.asayke.exception.ApplicationUserValidationException;
 import ru.asayke.repository.PasswordReseatingCodeRepository;
@@ -18,6 +19,7 @@ public class PasswordReseatingCodeServiceImpl implements PasswordReseatingCodeSe
     PasswordReseatingCodeRepository passwordReseatingCodeRepository;
 
     @Override
+    @Transactional
     public int create(String email) {
         if (!existByEmail(email)) {
 
@@ -37,15 +39,18 @@ public class PasswordReseatingCodeServiceImpl implements PasswordReseatingCodeSe
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PasswordReseatingCode findByEmail(String email) {
         return passwordReseatingCodeRepository.findByEmail(email).get();
     }
 
+    @Transactional(readOnly = true)
     public boolean existByEmail(String email) {
         return passwordReseatingCodeRepository.existsByEmail(email);
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         passwordReseatingCodeRepository.deleteById(id);
     }

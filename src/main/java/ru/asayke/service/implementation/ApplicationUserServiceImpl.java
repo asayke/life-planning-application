@@ -93,6 +93,7 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
     }
 
     @Override
+    @Transactional
     public Map<String, String> login(AuthenticationRequest authenticationRequest) {
         ApplicationUser applicationUser = userRepository.findByUsername(authenticationRequest.getUsername())
                 .orElseThrow(() -> new ApplicationUserNotFoundException("User not found"));
@@ -118,6 +119,7 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
     }
 
     @Override
+    @Transactional
     public Map<String, String> loginWithEmail(EmailAuthenticationRequest authenticationRequest) {
         ApplicationUser applicationUser = userRepository.findByEmail(authenticationRequest.getEmail())
                 .orElseThrow(() -> new ApplicationUserNotFoundException("User not found"));
@@ -144,6 +146,7 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
     }
 
     @Override
+    @Transactional
     public void startResetPassword(EmailRequest emailRequest) {
         int resetCode = passwordReseatingCodeService.create(emailRequest.getEmail());
 
@@ -157,6 +160,7 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
     }
 
     @Override
+    @Transactional
     public void resetPassword(PasswordReseatingDTO passwordDTO) {
         ApplicationUser applicationUser = userRepository.findByEmail(passwordDTO.getEmail())
                 .orElseThrow(() -> new ApplicationUserNotFoundException("User not found"));
@@ -180,6 +184,7 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ApplicationUserDto getMyProfile(String username) {
         return MapperUtils.convertUserToDto(findByUsername(username)
                 .orElseThrow(() -> new ApplicationUserNotFoundException("User not found"))
@@ -187,6 +192,7 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
     }
 
     @Override
+    @Transactional
     public void startRegistration(EmailRequest startRegistrationRequest) {
         if (userRepository.findByEmail(startRegistrationRequest.getEmail()).isPresent()) {
             throw new ApplicationUserValidationException(String.format("User with email %s already exists", startRegistrationRequest.getEmail()));
@@ -204,6 +210,7 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
     }
 
     @Override
+    @Transactional
     public void startLogin(EmailRequest startLoginRequest) {
         int loginCode = loginApprovingCodeService.create(startLoginRequest.getEmail());
 

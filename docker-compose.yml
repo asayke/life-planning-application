@@ -23,7 +23,7 @@ services:
       - "5050:80"
 
   admin-service:
-    image: "lfp:1.1.0"
+    image: "lfp:1.2.2"
     container_name: admin-service
     ports:
       - "8081:8081"
@@ -41,7 +41,7 @@ services:
       - kafka
 
   email-service:
-    image: "lfpe:1.1.2"
+    image: "lfpe:1.2.1"
     container_name: email-service
     ports:
       - "8082:8082"
