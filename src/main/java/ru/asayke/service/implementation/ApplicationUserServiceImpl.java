@@ -200,13 +200,15 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
 
         int registrationCode = registrationCodeService.create(startRegistrationRequest.getEmail());
 
-        EmailEvent kafkaDTO = new EmailEvent(
-                startRegistrationRequest.getEmail(),
-                "Your registration code",
-                String.format("Your registration code is %s", registrationCode)
-        );
+        System.out.printf("Registration code for user %s is %s%n", startRegistrationRequest.getEmail(), registrationCode);
 
-        kafkaMessagingService.sendMessage(kafkaDTO);
+        //        EmailEvent kafkaDTO = new EmailEvent(
+//                startRegistrationRequest.getEmail(),
+//                "Your registration code",
+//                String.format("Your registration code is %s", registrationCode)
+//        );
+//
+//        kafkaMessagingService.sendMessage(kafkaDTO);
     }
 
     @Override
@@ -214,12 +216,14 @@ public class ApplicationUserServiceImpl implements ApplicationUserService {
     public void startLogin(EmailRequest startLoginRequest) {
         int loginCode = loginApprovingCodeService.create(startLoginRequest.getEmail());
 
-        EmailEvent kafkaDTO = new EmailEvent(
-                startLoginRequest.getEmail(),
-                "Your confirmation code",
-                String.format("Your login code is %s", loginCode)
-        );
+        System.out.printf("Login code for user %s is %s%n", startLoginRequest.getEmail(), loginCode);
 
-        kafkaMessagingService.sendMessage(kafkaDTO);
+//        EmailEvent kafkaDTO = new EmailEvent(
+//                startLoginRequest.getEmail(),
+//                "Your confirmation code",
+//                String.format("Your login code is %s", loginCode)
+//        );
+//
+//        kafkaMessagingService.sendMessage(kafkaDTO);
     }
 }

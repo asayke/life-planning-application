@@ -1,83 +1,14 @@
 version: '3.7'
 
 services:
-  postgres:
-    image: postgres
-    container_name: database
-    restart: always
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_PASSWORD: postgres
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin4_container
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: root
-    ports:
-      - "5050:80"
-
   admin-service:
-    image: "lfp:1.2.2"
-    container_name: admin-service
+    image: "asayke/lfp:light-0.0.1"
+    container_name: admin-service-light
     ports:
       - "8081:8081"
     environment:
-      DATASOURCE_PASSWORD: postgres
-      DATASOURCE_URL: jdbc:postgresql://postgres:5432/diplom
-      DATASOURCE_USERNAME: postgres
       JWT_EXPIRED: 1000000
       JWT_SECRET: amogus
       SERVER_PORT: 8081
       TOPIC_NAME: email-topic
       KAFKA_HOST: kafka:29092
-    depends_on:
-      - postgres
-      - kafka
-
-  email-service:
-    image: "lfpe:1.2.1"
-    container_name: email-service
-    ports:
-      - "8082:8082"
-    environment:
-      KAFKA_HOST: kafka:29092
-      TOPIC_NAME: email-topic
-      MAIL_USERNAME: noilzep@gmail.com
-      MAIL_PASSWORD:
-      SERVER_PORT: 8082
-    depends_on:
-      - kafka
-
-  zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    container_name: zookeeper
-    ports:
-      - "2181:2181"
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_TICK_TIME: 2000
-
-  kafka:
-    image: confluentinc/cp-kafka:latest
-    container_name: kafka
-    ports:
-      - "9092:9092"
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    depends_on:
-      - zookeeper
-
-volumes:
-  postgres-data:
-  kafka-data:

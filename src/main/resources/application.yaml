@@ -9,26 +9,23 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     topic:
       name: ${TOPIC_NAME}
+
   datasource:
-    driver-class-name: org.postgresql.Driver
-    username: ${DATASOURCE_USERNAME}
-    url: ${DATASOURCE_URL}
-    password: ${DATASOURCE_PASSWORD}
+    driver-class-name: org.h2.Driver
+    username: sa
+    url: jdbc:h2:mem:testdb
+
   jpa:
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.H2Dialect
         show_sql: 'true'
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create-drop
+
   flyway:
-    enabled: true
-    baseline-on-migrate: true
-    baseline-description: "init"
-    baseline-version: 0
-    user: ${DATASOURCE_USERNAME}
-    password: ${DATASOURCE_PASSWORD}
-    url: ${DATASOURCE_URL}
+    enabled: false # Отключаем flyway
+
 jwt:
   token:
     secret: ${JWT_SECRET}
