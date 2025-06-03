@@ -14,7 +14,15 @@ import ru.asayke.security.JwtTokenProvider;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtTokenProvider jwtTokenProvider;
-    private static final String LOGIN_ENDPOINT = "/api/auth/**";
+    private static final String[] AUTH_WHITELIST = {
+            "/api/auth/**",
+            "/favicon.ico",
+            "/swagger-ui/**",
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/configuration/ui",
+            "/swagger-resources/configuration/security"
+    };
 
     @Bean
     public AuthenticationManager authenticationManager() throws Exception {
@@ -31,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(LOGIN_ENDPOINT).permitAll()
+                .antMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
